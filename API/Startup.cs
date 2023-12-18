@@ -1,4 +1,6 @@
-﻿using Infrastructure.Data;
+﻿using Domain.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 public class Startup
@@ -12,6 +14,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddScoped<IProductRepository, ProductRepository>();
+
         services.AddDbContext<StoreDataContext>(options =>
             options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
 
