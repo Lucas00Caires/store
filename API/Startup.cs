@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using API.Helpers;
+using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddAutoMapper(typeof(MappingProfiles));
 
         services.AddDbContext<StoreDataContext>(options =>
             options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
@@ -28,12 +31,13 @@ public class Startup
     {
         if (env.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            //app.UseSwagger();
+            //app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
         app.UseRouting();
+        app.UseStaticFiles();
         app.UseAuthorization();
         app.UseEndpoints(endpoints =>
         {
