@@ -1,7 +1,7 @@
-﻿using API.Helpers;
-using Domain.Interfaces;
+﻿using API.Extensions;
+using API.Helpers;
+using API.Middleware;
 using Infrastructure.Data;
-using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 public class Startup
@@ -15,30 +15,31 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddAutoMapper(typeof(MappingProfiles));
-
         services.AddDbContext<StoreDataContext>(options =>
             options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-
         services.AddControllers();
+        services.AddApplicationServices();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerDocumentation();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-        {
-            //app.UseSwagger();
-            //app.UseSwaggerUI();
-        }
-
+        app.UseMiddleware<ExceptionMiddleware>();
+        app.UseStatusCodePagesWithReExecute("/errors/{0}");
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseStaticFiles();
         app.UseAuthorization();
+
+        app.UseSwagger();
+
+        if (env.IsDevelopment())
+        {
+            app.UseSwaggerDocumentation();
+        }
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
