@@ -1,11 +1,9 @@
 ﻿using API.DTOs;
 using API.Errors;
-using API.Helpers;
 using AutoMapper;
 using Domain.Interfaces;
 using Domain.Model.Entities;
 using Domain.Specifications;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -31,9 +29,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts ([FromQuery] ProductSpecificationParams productParams)
         {
-            var specification = new ProductsWithTypesAndBrandsSpecification();
+            var specification = new ProductsWithTypesAndBrandsSpecification(productParams);
 
             var products = await _productRepository.ListAsync(specification);
 
