@@ -1,6 +1,8 @@
 ﻿using API.DTOs;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
+using Core.Specifications;
 using Domain.Interfaces;
 using Domain.Model.Entities;
 using Domain.Specifications;
@@ -29,13 +31,19 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts ([FromQuery] ProductSpecificationParams productParams)
+        public async Task<ActionResult<Pagination<ProductDto>>> GetProducts(
+            [FromQuery] ProductSpecificationParams productParams)
         {
-            var specification = new ProductsWithTypesAndBrandsSpecification(productParams);
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+            var countSpec = new ProductsWithFiltersForCountSpecification(productParams);
 
-            var products = await _productRepository.ListAsync(specification);
+            var totalItems = await _productRepository.CountAsync(countSpec);
+            var products = await _productRepository.ListAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<ProductDto>>(products);
+
+            return Ok(new Pagination<ProductDto>(productParams.PageIndex,
+                productParams.PageSize, totalItems, data));
         }
         
         ////////////////////// TO REMOVE - Just for tests 
@@ -59,12 +67,11 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            var specification = new ProductsWithTypesAndBrandsSpecification(id);
+            var spec = new ProductsWithTypesAndBrandsSpecification(id);
 
-            var product =  await _productRepository.GetEntityWithSpecification(specification);
+            var product = await _productRepository.GetEntityWithSpecification(spec);
 
-            if (product == null) 
-                return NotFound(new ApiResponse(NotFound().StatusCode));
+            if (product == null) return NotFound(new ApiResponse(404));
 
             return _mapper.Map<Product, ProductDto>(product);
         }
@@ -73,10 +80,10 @@ namespace API.Controllers
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()
         {
             return Ok(await _productBrandRepository.ListAllAsync());
-        }        
-        
+        }
+
         [HttpGet("types")]
-        public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductTypes()
         {
             return Ok(await _productTypeRepository.ListAllAsync());
         }

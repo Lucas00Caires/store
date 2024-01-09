@@ -39,6 +39,7 @@ public class Startup
         {
             app.UseSwaggerDocumentation();
         }
+        app.UseCors("AllowSpecificOrigin");
 
         app.UseEndpoints(endpoints =>
         {
