@@ -47,10 +47,10 @@
 
                 <div class="d-flex justify-content-between">          
                     <div class="form-inline my-2">
-                        <input class="form-control mr-2" style="width: 300px;" placeholder="search" type="text">
+                        <input (keyup.enter)="onSearch()" class="form-control mr-2" #search style="width: 300px;" placeholder="search" type="text">
                     </div>
-                    <button class="btn btn-outline-primary mx-2 my-2">Search</button>
-                    <button class="btn btn-outline-warning my-2">Reset</button>
+                    <button (click)="onSearch()" class="btn btn-outline-primary mx-2 my-2">Search</button>
+                    <button (click)="onReset()" class="btn btn-outline-warning my-2">Reset</button>
                 </div>
              
             </div>
