@@ -59,6 +59,26 @@ namespace API.Controllers
             return Ok();
         }
 
+        [HttpGet("error500")]
+        public async Task<ActionResult<ProductDto>> Error500()
+        {
+            return StatusCode(500, "Internal Server Error Custom Message");
+        }
+
+        [HttpGet("error400")]
+        public async Task<ActionResult<ProductDto>> Error400()
+        {
+            return BadRequest("Unique Bad Request");
+        }
+
+        [HttpGet("error400/multi")]
+        public async Task<ActionResult<List<string>>> Error400Multi()
+        {
+            var badRequests = new List<string> { "Bad Request 1", "Bad Request 2", "Bad Request 3" };
+            return BadRequest(badRequests);
+        }
+
+
         ///////////////////// TO REMOVE
 
 
