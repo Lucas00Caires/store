@@ -11,7 +11,7 @@ import { ShopParams } from '../shared/models/shopParams';
   styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit {
-  @ViewChild('search', {static: true}) searchTerm!: ElementRef;
+  @ViewChild('search', {static: false}) searchTerm!: ElementRef;
   products: IProduct[] = [];
   productBrands: IProductBrand[] = [];
   productTypes: IProductType[] = [];
@@ -86,7 +86,7 @@ export class ShopComponent implements OnInit {
     this.getProducts()
   }
 
-  onPageChanged(event: number ){
+  onPageChanged(event: number){
     this.shopParams.pageNumber = event;
     this.getProducts();
   }

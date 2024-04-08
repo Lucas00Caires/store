@@ -1,17 +1,18 @@
 <div class="card h-100 shadow-sm">
-    <img src="{{product.pictureUrl}}" alt="{{product.name}}" class="img-fluid">
+    <div class="image position-relative" style="cursor: pointer;">
+        <img src="{{product.pictureUrl}}" alt="{{product.name}}" class="img-fluid">
+        <div class="d-flex align-items-center justify-content-evenly hover-overlay">
+            <button type="button" class="btn btn-primary justify-content-center">
+                <i class="fa fa-shopping-cart mr-5"></i>
+            </button>
+            <button routerLink="/shop/{{product.id}}" type="button" class="btn btn-primary mx4">Details</button>
+        </div>
+    </div>
+   
     <div class="card-body d-flex flex-column">
         <a href="#">
             <h6 routerLink="/shop/{{product.id}}" class="text-uppercase"> {{product.name}} </h6>
         </a>
-
-        <span class="mb-2">{{product.price | currency}}</span>
-
-        <div class="btn-group mt-auto">
-            <button type="button" class="btn btn-outline-secondary">
-                <i class="fa fa-shopping-cart mr-2 mx-4"></i>
-            </button>
-            <button routerLink="/shop/{{product.id}}" type="button" class="btn btn-outline-secondary">Details</button>
-        </div>
+        <span class="mb-2">{{product.price | currency}}</span>        
     </div>
 </div>
