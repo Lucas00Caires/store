@@ -2,7 +2,6 @@
 using Domain.Model.Entities;
 using StackExchange.Redis;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace Infrastructure.Data.Repositories
 {

@@ -2,7 +2,7 @@
     <div class="image position-relative" style="cursor: pointer;">
         <img src="{{product.pictureUrl}}" alt="{{product.name}}" class="img-fluid">
         <div class="d-flex align-items-center justify-content-evenly hover-overlay">
-            <button type="button" class="btn btn-primary justify-content-center">
+            <button (click)="addItemToBasket()" type="button" class="btn btn-primary justify-content-center">
                 <i class="fa fa-shopping-cart mr-5"></i>
             </button>
             <button routerLink="/shop/{{product.id}}" type="button" class="btn btn-primary mx4">Details</button>
