@@ -2,6 +2,7 @@
 using API.Helpers;
 using API.Middleware;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -19,6 +20,8 @@ public class Startup
         services.AddAutoMapper(typeof(MappingProfiles));
         services.AddDbContext<StoreDataContext>(options =>
             options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<AppIdentityDbContext>(options =>
+           options.UseSqlServer(_configuration.GetConnectionString("IdentityConnection")));
 
         services.AddSingleton<IConnectionMultiplexer>(x =>
         {
@@ -28,6 +31,7 @@ public class Startup
 
         services.AddControllers();
         services.AddApplicationServices();
+        services.AddIdentityServices(_configuration);
         services.AddEndpointsApiExplorer();
         services.AddSwaggerDocumentation();
     }
@@ -39,10 +43,10 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseStaticFiles();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseSwagger();
-
         if (env.IsDevelopment())
         {
             app.UseSwaggerDocumentation();
