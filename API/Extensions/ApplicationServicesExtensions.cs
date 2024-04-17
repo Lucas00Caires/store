@@ -1,5 +1,6 @@
 ﻿using API.Errors;
 using Domain.Interfaces;
+using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,8 @@ namespace API.Extensions
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.Configure<ApiBehaviorOptions>(options =>
