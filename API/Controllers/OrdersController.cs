@@ -6,7 +6,6 @@ using Domain.Interfaces;
 using Domain.Model.Entities.OrderAggregate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Domain.Model.Entities.OrderAggregate;
 
 namespace API.Controllers
 {

@@ -1,20 +1,32 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Observable, delay, finalize } from "rxjs";
-import { BusyService } from "../services/busy.service";
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor
+} from '@angular/common/http';
+import { delay, finalize, identity, Observable } from 'rxjs';
+import { BusyService } from '../services/busy.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
-export class LoadingInterceptor implements HttpInterceptor{
+export class LoadingInterceptor implements HttpInterceptor {
 
-    constructor(private busyService: BusyService){}
+  constructor(private busyService: BusyService) { }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        this.busyService.busy();
-        return next.handle(req).pipe(
-            delay(1000),
-            finalize(() =>
-                this.busyService.idle()
-            )
-        );
-    } 
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    if (
+      request.url.includes('emailExists') ||
+      request.method === 'POST' && request.url.includes('orders') ||
+      request.method === 'DELETE'
+    ) {
+      return next.handle(request);
+    }
+
+    this.busyService.busy();
+    return next.handle(request).pipe(
+      (environment.production ? identity : delay(1000)),
+      finalize(() => this.busyService.idle())
+    )
+  }
 }

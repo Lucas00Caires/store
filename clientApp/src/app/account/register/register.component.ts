@@ -14,19 +14,19 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) {}
 
-  complexPassword = "(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$"
+  complexPassword = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{\":;'?/<>.,]).{6,10}$";
 
   registerForm = this.fb.group({
     displayName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email], [this.validateEmailNotTaken()]],
     password: ['', [Validators.required, Validators.pattern(this.complexPassword)]],
-  })  
+  });
 
   onSubmit() {
     this.accountService.register(this.registerForm.value).subscribe({
       next: () => this.router.navigateByUrl('/shop'),
       error: error => this.errors = error.errors
-    })
+    });
   }
 
   validateEmailNotTaken(): AsyncValidatorFn {
@@ -36,12 +36,11 @@ export class RegisterComponent {
         take(1),
         switchMap(() => {
           return this.accountService.checkEmailExists(control.value).pipe(
-            map(result => result ? {emailExists: true} : null),
+            map(result => result ? { emailExists: true } : null),
             finalize(() => control.markAsTouched())
-          )
+          );
         })
-      )
-
-    }
+      );
+    };
   }
 }

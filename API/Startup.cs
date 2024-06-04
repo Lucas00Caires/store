@@ -41,6 +41,7 @@ public class Startup
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseStatusCodePagesWithReExecute("/errors/{0}");
         app.UseHttpsRedirection();
+        app.UseCors("AllowSpecificOrigin");
         app.UseRouting();
         app.UseStaticFiles();
         app.UseAuthentication();
@@ -51,7 +52,6 @@ public class Startup
         {
             app.UseSwaggerDocumentation();
         }
-        app.UseCors("AllowSpecificOrigin");
 
         app.UseEndpoints(endpoints =>
         {

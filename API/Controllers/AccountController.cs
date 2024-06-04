@@ -83,7 +83,7 @@ namespace API.Controllers
 
             if(!result.Succeeded) 
             {
-                return Unauthorized(new ApiResponse(401));
+                return Unauthorized(new ApiResponse(401, "Invalid email or password"));
             }
 
             return new UserDto

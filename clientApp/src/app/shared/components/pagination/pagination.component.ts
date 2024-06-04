@@ -1,4 +1,3 @@
-// pagination.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -8,18 +7,18 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class PaginationComponent {
   @Input() totalCount: number = 0;
-  @Input() pageSize: number = 6;
+  @Input() pageSize: number = 10;
+  @Input() currentPage: number = 1;
   @Output() pageChanged = new EventEmitter<number>();
-  @Input()  currentPage: number = 1;
 
   get pageCount(): number {
     return Math.ceil(this.totalCount / this.pageSize);
   }
 
-  onPageChanged(pageNumber:number ): void {
+  onPageChanged(pageNumber: number): void {
     if (pageNumber >= 1 && pageNumber <= this.pageCount && pageNumber !== this.currentPage) {
       this.currentPage = pageNumber;
-      this.pageChanged.emit(pageNumber);
+      this.pageChanged.emit(this.currentPage);
     }
   }
 
